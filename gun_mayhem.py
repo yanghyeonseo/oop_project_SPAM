@@ -15,7 +15,7 @@ pygame.display.set_caption("Gun mayhem")    # 화면 이름 설정
 FPS = 60
 clock = pygame.time.Clock()  # 파이게임 모듈에 사용될 FPS 설정
 
-key_dict = {1: [pygame.K_d, pygame.K_g, pygame.K_r, pygame.K_f, pygame.K_LSHIFT],
+key_dict = {1: [pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_LCTRL],
             2: [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN, pygame.K_COMMA]}
 
 # 이미지 및 오디오 불러오기
@@ -39,15 +39,37 @@ except Exception as err:
     exit(0)
 
 
-class Player:
-    def __init__(self, key_type):
-        self.img_set = player_img
+class Movement:
+    def __init__(self, img, width, height, x, y, Vx, Vy):
+        self.img_set = img
+        self.img = img
+        self.width = width
+        self.height = height
+        self.x = x
+        self.y = y
+        self.Vx = Vx
+        self.Vy = Vy
+
+    def update_y(self, g, board_list):
+        for board in board_list:
+            if board.is_on(self.width, self.height, self.x, self.y, self.Vy):
+                self.Vy = 0
+                self.y = board.y - self.height / 2
+                return True
+
+        self.y += self.Vy
+        self.Vy += g
+        return False
+
+    def update_x(self):
+        self.x += self.Vx
+
+
+class Player(Movement):
+    def __init__(self, img, key_type):
+        super().__init__(img, player_width, player_height, screen_width/2-player_width/2, player_height/2, 0, 0)
         self.key_type = key_type
 
-        self.x = screen_width/2-player_width/2      # 중심 기준
-        self.y = player_height/2                    # 중심 기준
-        self.Vx = 0
-        self.Vy = 0
         self.direction = "right"
         self.jump_cnt = 0
 
@@ -55,17 +77,8 @@ class Player:
         self.special_bullet = 0
 
     def update(self, board_list, bullet_list, item_list):
-        g = 0.5
-        on_board = False
-        for board in board_list:
-            if board.is_on(player_width, player_height, self.x, self.y, self.Vy):
-                self.Vy = 0
-                self.y = board.y - player_height/2
-                on_board = True
-                self.jump_cnt = 0
-        if on_board is False:
-            self.y += self.Vy
-            self.Vy += g
+        if self.update_y(0.5, board_list):
+            self.jump_cnt = 0
 
         if self.y > 3 * screen_height:
             self.life -= 1
@@ -80,7 +93,7 @@ class Player:
                 else:
                     self.Vx -= bullet.power
 
-        self.x += self.Vx
+        self.update_x()
 
         for item in item_list:
             if item.overlap(self.x, self.y):
@@ -114,9 +127,9 @@ class Player:
             if event.key == self.key_type[4]:
                 if True:
                     if self.direction == "right":
-                        stage.bullet_list.append(Bullet(self.x+player_width, self.y, 10, 0.5))
+                        stage.bullet_list.append(Bullet(bullet_img, self.x+player_width, self.y, 10, 0.5))
                     else:
-                        stage.bullet_list.append(Bullet(self.x-player_width, self.y, -10, 0.5))
+                        stage.bullet_list.append(Bullet(bullet_img, self.x-player_width, self.y, -10, 0.5))
 
         if event.type == pygame.KEYUP:
             if event.key == self.key_type[0]:
@@ -140,41 +153,25 @@ class Board:
         return self.x1-w/2 < p_x < self.x2+w/2 and self.y - p_Vy <= p_y + h/2 <= self.y
 
 
-class Bullet:
-    def __init__(self, x, y, Vx, power):
-        self.img = bullet_img
-        self.x = x
-        self.y = y
-        self.Vx = Vx
+class Bullet(Movement):
+    def __init__(self, img, x, y, Vx, power):
+        super().__init__(img, bullet_width, bullet_height, x, y, Vx, 0)
         self.power = power
 
     def update(self):
-        self.x += self.Vx
+        self.update_x()
 
     def is_hit(self, p_x, p_y):
         return p_x-player_width/2 < self.x < p_x+player_width/2 and p_y-player_height/2 < self.y < p_y+player_height/2
 
 
-class Item:
-    def __init__(self, type, width, height, x, y):
+class Item(Movement):
+    def __init__(self, img, type, width, height, x, y):
+        super().__init__(img, width, height, x, y, 0, 0)
         self.type = type
-        self.width = width
-        self.height = height
-        self.x = x
-        self.y = y
-        self.Vy = 0
 
     def update(self, board_list):
-        g = 0.05
-        on_board = False
-        for board in board_list:
-            if board.is_on(self.width, self.height, self.x, self.y, self.Vy):
-                self.Vy = 0
-                self.y = board.y - self.height / 2
-                on_board = True
-        if on_board is False:
-            self.y += self.Vy
-            self.Vy += g
+        self.update_y(0.05, board_list)
 
     def overlap(self, p_x, p_y):
         if p_x + player_width / 2 < self.x - self.width / 2 or p_x - player_width / 2 > self.x + self.width / 2 or p_y + player_height / 2 < self.y - self.height / 2 or p_y - player_height / 2 > self.y + self.height / 2:
@@ -183,15 +180,13 @@ class Item:
 
 
 class Heart(Item):
-    def __init__(self, x, y):
-        super().__init__('heart', item_life_width, item_life_height, x, y)
-        self.img = item_life_img
+    def __init__(self, img, x, y):
+        super().__init__(img, 'heart', item_life_width, item_life_height, x, y)
 
 
 class Special_bullet(Item):
-    def __init__(self, x, y):
-        super().__init__('bullet', item_bullet_width, item_bullet_height, x, y)
-        self.img = item_bullet_img
+    def __init__(self, img, x, y):
+        super().__init__(img, 'bullet', item_bullet_width, item_bullet_height, x, y)
 
 
 class Stage:
@@ -207,7 +202,7 @@ class Stage:
 
     def make_player(self, num):
         for i in range(1, num+1):
-            self.player_list.append(Player(key_dict[i]))
+            self.player_list.append(Player(player_img, key_dict[i]))
 
     def run_game(self):
         running = True
@@ -245,9 +240,9 @@ class Stage:
 
             item_num = random.randint(1, 1000)
             if item_num <= 1:
-                self.item_list.append(Heart(random.randint(50, screen_width-50), 0))
+                self.item_list.append(Heart(item_life_img, random.randint(50, screen_width-50), 0))
             elif item_num <= 2:
-                self.item_list.append(Special_bullet(random.randint(50, screen_width-50), 0))
+                self.item_list.append(Special_bullet(item_bullet_img, random.randint(50, screen_width-50), 0))
             for item in self.item_list:
                 if item.type != 'used':
                     item.update(self.board_list)
