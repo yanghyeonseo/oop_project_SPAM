@@ -3,11 +3,11 @@ import pygame, random
 pygame.init()  # 게임 초기화
 
 screen_width, screen_height = 640, 480
-player_width, player_height = 25, 50
-bullet_width, bullet_height = 1, 1
+player_width, player_height = 14, 29
+bullet_width, bullet_height = 6, 5
 
-item_life_width, item_life_height = 50, 50
-item_bullet_width, item_bullet_height = 25, 25
+item_life_width, item_life_height = 32, 29
+item_bullet_width, item_bullet_height = 15, 15
 
 screen = pygame.display.set_mode((screen_width, screen_height))  # 화면 넓이 설정.
 pygame.display.set_caption("Gun mayhem")    # 화면 이름 설정
@@ -54,7 +54,7 @@ class Movement:
         for board in board_list:
             if board.is_on(self.width, self.height, self.x, self.y, self.Vy):
                 self.Vy = 0
-                self.y = board.y - self.height / 2
+                self.y = board.y - self.height
                 return True
 
         self.y += self.Vy
@@ -67,7 +67,7 @@ class Movement:
 
 class Player(Movement):
     def __init__(self, img, key_type):
-        super().__init__(img, player_width, player_height, screen_width/2-player_width/2, player_height/2, 0, 0)
+        super().__init__(img, player_width, player_height, screen_width/2-player_width/2, -player_height, 0, 0)
         self.key_type = key_type
 
         self.direction = "right"
@@ -84,7 +84,7 @@ class Player(Movement):
             self.life -= 1
             self.Vx, self.Vy = 0, 0
             self.x = screen_width/2 - player_width/2
-            self.y = -player_height/2
+            self.y = -player_height
 
         for bullet in bullet_list:
             if bullet.is_hit(self.x, self.y):
@@ -100,7 +100,7 @@ class Player(Movement):
                 if item.type == 'heart':
                     self.life += 1
                 if item.type == 'bullet':
-                    self.special_bullet += 30
+                    self.special_bullet += 10
                 item.type = 'used'
 
     def choice_event(self, event):
@@ -125,11 +125,15 @@ class Player(Movement):
                 self.y += 1
             # 총알 쏘기
             if event.key == self.key_type[4]:
-                if True:
-                    if self.direction == "right":
-                        stage.bullet_list.append(Bullet(bullet_img, self.x+player_width, self.y, 10, 0.5))
-                    else:
-                        stage.bullet_list.append(Bullet(bullet_img, self.x-player_width, self.y, -10, 0.5))
+                power = 1
+                if self.special_bullet > 0:
+                    power = 2
+                    self.special_bullet -= 1
+
+                if self.direction == "right":
+                    stage.bullet_list.append(Bullet(bullet_img, self.x+player_width, self.y+5, 10, power))
+                else:
+                    stage.bullet_list.append(Bullet(bullet_img, self.x-bullet_width, self.y+5, -10, power))
 
         if event.type == pygame.KEYUP:
             if event.key == self.key_type[0]:
@@ -150,7 +154,7 @@ class Board:
         pygame.draw.rect(screen, self.color, [self.x1, self.y, self.x2-self.x1, d])
 
     def is_on(self, w, h, p_x, p_y, p_Vy):
-        return self.x1-w/2 < p_x < self.x2+w/2 and self.y - p_Vy <= p_y + h/2 <= self.y
+        return self.x1-w < p_x < self.x2 and self.y - p_Vy <= p_y + h <= self.y
 
 
 class Bullet(Movement):
@@ -162,7 +166,7 @@ class Bullet(Movement):
         self.update_x()
 
     def is_hit(self, p_x, p_y):
-        return p_x-player_width/2 < self.x < p_x+player_width/2 and p_y-player_height/2 < self.y < p_y+player_height/2
+        return self.x+self.width-player_width < p_x < self.x+self.width and self.y - player_height < p_y < self.y + self.height
 
 
 class Item(Movement):
@@ -174,9 +178,10 @@ class Item(Movement):
         self.update_y(0.05, board_list)
 
     def overlap(self, p_x, p_y):
-        if p_x + player_width / 2 < self.x - self.width / 2 or p_x - player_width / 2 > self.x + self.width / 2 or p_y + player_height / 2 < self.y - self.height / 2 or p_y - player_height / 2 > self.y + self.height / 2:
-            return False
-        return True
+        return self.x - self.width - player_width < p_x < self.x + self.width and self.y - player_height < p_y < self.y + self.height
+        # if p_x + player_width / 2 < self.x - self.width / 2 or p_x - player_width / 2 > self.x + self.width / 2 or p_y + player_height / 2 < self.y - self.height / 2 or p_y - player_height / 2 > self.y + self.height / 2:
+        #     return False
+        # return True
 
 
 class Heart(Item):
@@ -215,6 +220,11 @@ class Stage:
             P2_life = font.render("생명: {}".format(self.player_list[1].life), True, (28, 0, 0))
             screen.blit(P1_life, (20, 20))
             screen.blit(P2_life, (530, 20))
+
+            P1_bullet = font.render("총알: {}".format(self.player_list[0].special_bullet), True, (28, 0, 0))
+            P2_bullet = font.render("총알: {}".format(self.player_list[1].special_bullet), True, (28, 0, 0))
+            screen.blit(P1_bullet, (20, 60))
+            screen.blit(P2_bullet, (530, 60))
 
             for board in self.board_list:
                 board.draw()
@@ -271,6 +281,11 @@ class Stage:
             P2_life = font.render("생명: {}".format(self.player_list[1].life), True, (28, 0, 0))
             screen.blit(P1_life, (20, 20))
             screen.blit(P2_life, (530, 20))
+
+            P1_bullet = font.render("총알: {}".format(self.player_list[0].special_bullet), True, (28, 0, 0))
+            P2_bullet = font.render("총알: {}".format(self.player_list[1].special_bullet), True, (28, 0, 0))
+            screen.blit(P1_bullet, (20, 60))
+            screen.blit(P2_bullet, (530, 60))
 
             events = pygame.event.get()
             for event in events:
