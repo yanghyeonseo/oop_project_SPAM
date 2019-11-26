@@ -22,7 +22,7 @@ key_dict = {1: [pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_LCTRL],
 try:
     font = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 30)
 
-    background_img = pygame.image.load("./img/sasabackground.png")
+    background_img = pygame.image.load("./img/background1.png")
     player_img = pygame.image.load("./img/player1.png")
     bullet_img = pygame.image.load("./img/bullet1.png")
     floor_img = pygame.image.load("./img/floor1.png")
@@ -63,6 +63,9 @@ class Movement:
 
     def update_x(self):
         self.x += self.Vx
+
+    def in_screen(self):
+        return -self.width < self.x < screen_width and -self.height < self.y < screen_height
 
 
 class Player(Movement):
@@ -247,6 +250,8 @@ class Stage:
             for bullet in self.bullet_list:
                 bullet.update()
                 screen.blit(bullet.img, (bullet.x, bullet.y))
+                if not bullet.in_screen():
+                    self.bullet_list.remove(bullet)
 
             item_num = random.randint(1, 1000)
             if item_num <= 1:
@@ -254,7 +259,9 @@ class Stage:
             elif item_num <= 2:
                 self.item_list.append(Special_bullet(item_bullet_img, random.randint(50, screen_width-50), 0))
             for item in self.item_list:
-                if item.type != 'used':
+                if item.type == 'used' or not item.in_screen():
+                    self.item_list.remove(item)
+                else:
                     item.update(self.board_list)
                     screen.blit(item.img, (item.x, item.y))
 
@@ -300,7 +307,8 @@ class Stage:
                 screen.blit(player.img_set, (player.x, player.y))
 
             for bullet in self.bullet_list:
-                screen.blit(bullet.img, (bullet.x, bullet.y))
+                if bullet.in_screen():
+                    screen.blit(bullet.img, (bullet.x, bullet.y))
 
             for item in self.item_list:
                 if item.type != 'used':
@@ -311,12 +319,10 @@ class Stage:
 
 
 stage = Stage()
-stage.make_board(267, 382, 135, (0, 115, 157, 220))
-stage.make_board(268, 381, 210, (0, 115, 157, 220))
-stage.make_board(123, 278, 310, (0, 115, 157, 220))
-stage.make_board(368, 523, 310, (0, 115, 157, 220))
-stage.make_board(23, 150, 357, (0, 115, 157, 220))
-stage.make_board(490, 617, 357, (0, 115, 157, 220))
+stage.make_board(100, 150, 310, (0, 0, 0, 0))
+stage.make_board(100, 500, 400, (0, 255, 0, 0))
+stage.make_board(300, 500, 350, (0, 0, 255, 0))
+stage.make_board(320, 450, 320, (0, 100, 255, 40))
 stage.make_player(2)
 stage.run_game()
 stage.game_over()
