@@ -22,7 +22,7 @@ key_dict = {1: [pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_LCTRL],
 try:
     font = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 30)
 
-    background_img = pygame.image.load("./img/background1.png")
+    background_img = pygame.image.load("./img/sasabackground.png")
     player_img = pygame.image.load("./img/player1.png")
     bullet_img = pygame.image.load("./img/bullet1.png")
     floor_img = pygame.image.load("./img/floor1.png")
@@ -296,10 +296,12 @@ class Stage:
 
 
 stage = Stage()
-stage.make_board(100, 150, 310, (0, 0, 0, 0))
-stage.make_board(100, 500, 400, (0, 255, 0, 0))
-stage.make_board(300, 500, 350, (0, 0, 255, 0))
-stage.make_board(320, 450, 320, (0, 100, 255, 40))
+stage.make_board(267, 382, 135, (0, 115, 157, 220))
+stage.make_board(268, 381, 210, (0, 115, 157, 220))
+stage.make_board(123, 278, 310, (0, 115, 157, 220))
+stage.make_board(368, 523, 310, (0, 115, 157, 220))
+stage.make_board(23, 150, 357, (0, 115, 157, 220))
+stage.make_board(490, 617, 357, (0, 115, 157, 220))
 stage.make_player(2)
 stage.run_game()
 stage.game_over()
