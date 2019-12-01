@@ -50,6 +50,7 @@ except Exception as err:
 
 player_dict = {1: prince_img, 2: princess_img, 3: pinky_img, 4: ninja_img, 5: skeleton_img}
 
+
 class Movement:
     def __init__(self, img, width, height, x, y, Vx, Vy):
         self.img_set = img

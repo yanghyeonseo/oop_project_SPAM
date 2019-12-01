@@ -6,6 +6,7 @@ RED = (255, 0, 0)
 pad_width = 480  # 게임화면의 가로 크기
 pad_height = 640  # 게임화면의 세로 크기
 
+
 class GameCharacter:
     def __init__(self, position):
         self.sheet = pygame.image.load('girlsheet.png')

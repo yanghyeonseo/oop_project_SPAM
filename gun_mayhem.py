@@ -1,42 +1,7 @@
 import pygame, random
+from init import *
 
 pygame.init()  # 게임 초기화
-
-screen_width, screen_height = 640, 480
-player_width, player_height = 14, 29
-bullet_width, bullet_height = 6, 5
-
-item_life_width, item_life_height = 32, 29
-item_bullet_width, item_bullet_height = 15, 15
-
-screen = pygame.display.set_mode((screen_width, screen_height))  # 화면 넓이 설정.
-pygame.display.set_caption("Gun mayhem")    # 화면 이름 설정
-
-FPS = 60
-clock = pygame.time.Clock()  # 파이게임 모듈에 사용될 FPS 설정
-
-key_dict = {1: [pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_LCTRL],
-            2: [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN, pygame.K_COMMA]}
-
-# 이미지 및 오디오 불러오기
-try:
-    font = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 30)
-
-    background_img = pygame.image.load("./img/background1.png")
-    player_img = pygame.image.load("./img/player1.png")
-    bullet_img = pygame.image.load("./img/bullet1.png")
-    floor_img = pygame.image.load("./img/floor1.png")
-    item_life_img = pygame.image.load("./img/heart1.png")
-    item_bullet_img = pygame.image.load("./img/item_bullet1.png")
-
-    pygame.mixer.music.load('./audio/bgm1.mp3')
-    pygame.mixer.music.play(-1, 0.0)
-
-except Exception as err:
-    print('그림 또는 효과음 또는 글꼴 삽입에 문제가 있습니다.: ', err)
-    # 에러가 발생하면 프로그램을 종료함.
-    pygame.quit()
-    exit(0)
 
 
 class Movement:
@@ -78,6 +43,7 @@ class Player(Movement):
 
         self.life = 5
         self.special_bullet = 0
+        self.sheild = 0
 
     def update(self, board_list, bullet_list, item_list):
         if self.update_y(0.5, board_list):
@@ -91,10 +57,8 @@ class Player(Movement):
 
         for bullet in bullet_list:
             if bullet.is_hit(self.x, self.y):
-                if bullet.Vx > 0:
+                if self.sheild == 0:
                     self.Vx += bullet.power
-                else:
-                    self.Vx -= bullet.power
 
         self.update_x()
 
@@ -104,6 +68,8 @@ class Player(Movement):
                     self.life += 1
                 if item.type == 'bullet':
                     self.special_bullet += 10
+                if item.type == 'shield':
+                    self.shield += 60
                 item.type = 'used'
 
     def choice_event(self, event):
@@ -128,15 +94,17 @@ class Player(Movement):
                 self.y += 1
             # 총알 쏘기
             if event.key == self.key_type[4]:
+                bullet_image = bullet_img
                 power = 1
                 if self.special_bullet > 0:
+                    bullet_image = gold_bullet_img
                     power = 2
                     self.special_bullet -= 1
 
                 if self.direction == "right":
-                    stage.bullet_list.append(Bullet(bullet_img, self.x+player_width, self.y+5, 10, power))
+                    stage.bullet_list.append(Bullet(bullet_image, self.x+player_width, self.y+player_height/2, 10, power))
                 else:
-                    stage.bullet_list.append(Bullet(bullet_img, self.x-bullet_width, self.y+5, -10, power))
+                    stage.bullet_list.append(Bullet(bullet_image, self.x-bullet_width, self.y+player_height/2, -10, -power))
 
         if event.type == pygame.KEYUP:
             if event.key == self.key_type[0]:
@@ -182,19 +150,21 @@ class Item(Movement):
 
     def overlap(self, p_x, p_y):
         return self.x - self.width - player_width < p_x < self.x + self.width and self.y - player_height < p_y < self.y + self.height
-        # if p_x + player_width / 2 < self.x - self.width / 2 or p_x - player_width / 2 > self.x + self.width / 2 or p_y + player_height / 2 < self.y - self.height / 2 or p_y - player_height / 2 > self.y + self.height / 2:
-        #     return False
-        # return True
 
 
 class Heart(Item):
     def __init__(self, img, x, y):
-        super().__init__(img, 'heart', item_life_width, item_life_height, x, y)
+        super().__init__(img, 'heart', item_heart_width, item_heart_height, x, y)
 
 
-class Special_bullet(Item):
+class Magazine(Item):
     def __init__(self, img, x, y):
-        super().__init__(img, 'bullet', item_bullet_width, item_bullet_height, x, y)
+        super().__init__(img, 'bullet', item_magazine_width, item_magazine_height, x, y)
+
+
+class Shield(Item):
+    def __init__(self, img, x, y):
+        super().__init__(img, 'shield', item_shield_width, item_shield_height, x, y)
 
 
 class Stage:
@@ -257,7 +227,7 @@ class Stage:
             if item_num <= 1:
                 self.item_list.append(Heart(item_life_img, random.randint(50, screen_width-50), 0))
             elif item_num <= 2:
-                self.item_list.append(Special_bullet(item_bullet_img, random.randint(50, screen_width-50), 0))
+                self.item_list.append(Magazine(item_bullet_img, random.randint(50, screen_width - 50), 0))
             for item in self.item_list:
                 if item.type == 'used' or not item.in_screen():
                     self.item_list.remove(item)
