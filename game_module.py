@@ -171,9 +171,9 @@ class Player(Movement):
                 self.action_name = 'down'
                 self.y += 1
             # 총알 쏘기
-            gun_sound.play()
             if event.key == self.key_type[4]:
                 self.action_name = 'shoot'
+                gun_sound.play()
                 bullet_image = bullet_img
                 power = 1
                 if self.special_bullet > 0:

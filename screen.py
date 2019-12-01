@@ -1,6 +1,6 @@
 from initing import *
 from game_module import *
-from pygame.locals import *
+
 
 pygame.init()  # 게임 초기화
 
@@ -85,11 +85,11 @@ def map_select():
     while background_num is None:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if event.key == K_1:
+                if event.key == pygame.K_1:
                     background_num = 0
-                if event.key == K_2:
+                if event.key == pygame.K_2:
                     background_num = 1
-                if event.key == K_3:
+                if event.key == pygame.K_3:
                     background_num = 2
     return background_num
 
