@@ -1,4 +1,4 @@
-import pygame, random, sys
+import pygame, random
 
 pygame.init()
 
@@ -32,7 +32,7 @@ try:
     background3 = pygame.image.load("./image/instruction2.png")
     background4 = pygame.image.load("./image/gamerule.png")
     character_background = pygame.image.load("./image/characters.png")
-    mbg = pygame.image.load("./image/map_selection.png")
+    map_background = pygame.image.load("./image/map_selection.png")
 
     sasa_morning_img = pygame.image.load("./image/sasa_morning.png")
     sasa_afternoon_img = pygame.image.load("./image/sasa_background.png")
@@ -55,6 +55,10 @@ try:
     ninja_shield_img = pygame.image.load('./image/sheet_ninjn_shield.png')
     skeleton_img = pygame.image.load('./image/sheet_skeleton.png')
     skeleton_shield_img = pygame.image.load('./image/sheet_skeleton_shield.png')
+
+    gun_sound = pygame.mixer.Sound("./audio/sound_gun.wav")
+    scream_sound = pygame.mixer.Sound("./audio/sound_scream.wav")
+    pop_sound = pygame.mixer.Sound("./audio/pop.wav")
 
     pygame.mixer.music.load('./audio/bgm1.mp3')
     pygame.mixer.music.play(-1, 0.0)

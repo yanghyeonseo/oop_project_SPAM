@@ -79,19 +79,19 @@ def character_select():
 
 
 def map_select():
-    screen.blit(mbg, (0, 0))
+    screen.blit(map_background, (0, 0))
     pygame.display.update()
-    background = None
-    while background is None:
+    background_num = None
+    while background_num is None:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == K_1:
-                    background = 0
+                    background_num = 0
                 if event.key == K_2:
-                    background = 1
+                    background_num = 1
                 if event.key == K_3:
-                    background = 2
-    return background
+                    background_num = 2
+    return background_num
 
 
 def game_screen(player1, player2, background):

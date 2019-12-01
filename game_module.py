@@ -111,7 +111,7 @@ class Player(Movement):
                 if item.type == 'heart':
                     self.life += 1
                 if item.type == 'bullet':
-                    self.special_bullet += 10
+                    self.special_bullet += 20
                 if item.type == 'shield':
                     self.shield += 600
                 item.type = 'used'
