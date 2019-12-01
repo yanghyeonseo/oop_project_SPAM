@@ -58,7 +58,7 @@ try:
 
     gun_sound = pygame.mixer.Sound("./audio/sound_gun.wav")
     scream_sound = pygame.mixer.Sound("./audio/sound_scream.wav")
-    pop_sound = pygame.mixer.Sound("./audio/pop.wav")
+    pop_sound = pygame.mixer.Sound("./audio/sound_pop.wav")
 
     pygame.mixer.music.load('./audio/bgm1.mp3')
     pygame.mixer.music.play(-1, 0.0)
