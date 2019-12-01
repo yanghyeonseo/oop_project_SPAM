@@ -46,6 +46,10 @@ try:
     skeleton_img = pygame.image.load('./image/sheet_skeleton.png')
     skeleton_shield_img = pygame.image.load('./image/sheet_skeleton_shield.png')
 
+    gun_sound = pygame.mixer.Sound("./audio/gunsound.wav")
+    scream_sound = pygame.mixer.Sound("./audio/scream.wav")
+    pop_sound = pygame.mixer.Sound("./audio/pop.wav")
+
     font_basic = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 18)  # 나눔 글씨체로 설정, 크기는 18
     font_big = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 70)
     font_hint = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 60)
