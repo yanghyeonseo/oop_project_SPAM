@@ -1,4 +1,4 @@
-from initing import *
+from init import *
 from game_module import *
 
 
@@ -106,9 +106,3 @@ def game_screen(player1, player2, background):
     stage.game_over()
     pygame.quit()
 
-
-if __name__ == '__main__':
-    screen_start()
-    player1_num, player2_num = character_select()
-    background = map_select()
-    game_screen(player1_num, player2_num, background)

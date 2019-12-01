@@ -1,4 +1,4 @@
-from initing import *
+from init import *
 
 pygame.init()  # 게임 초기화
 
