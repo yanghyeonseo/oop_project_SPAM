@@ -271,7 +271,7 @@ class Shield(Item):
 
 class Stage:
     def __init__(self):
-        self.img = background_img
+        self.img = []
         self.board_list = []
         self.player_list = []
         self.bullet_list = []
@@ -284,12 +284,12 @@ class Stage:
         self.player_list.append(Player(player1))
         self.player_list.append(Player(player2))
 
-    def run_game(self):
+    def run_game(self, background):
         running = True
 
         while running:
             screen.fill((0, 0, 0))  # 화면을 색칠함.
-            screen.blit(background_img, (0, 0))
+            screen.blit(stage_list[background], (0, 0))
 
             P1_life = font.render("생명: {}".format(self.player_list[0].life), True, (28, 0, 0))
             P2_life = font.render("생명: {}".format(self.player_list[1].life), True, (28, 0, 0))
