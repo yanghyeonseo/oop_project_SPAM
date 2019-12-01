@@ -2,16 +2,17 @@ import pygame, random, sys
 
 pygame.init()
 
+white = (255, 255, 255)
+black = (0, 0, 0)
+text_color = white
+
 screen_width, screen_height = 640, 480
 player_width, player_height = 30, 47
 bullet_width, bullet_height = 6, 3
 
-item_heart_width, item_heart_height = 32, 29
+item_heart_width, item_heart_height = 14, 12
 item_magazine_width, item_magazine_height = 14, 12
 item_shield_width, item_shield_height = 16, 16
-
-screen = pygame.display.set_mode((screen_width, screen_height))  # 화면 넓이 설정.
-pygame.display.set_caption("Gun mayhem")    # 화면 이름 설정
 
 FPS = 60
 clock = pygame.time.Clock()  # 파이게임 모듈에 사용될 FPS 설정
@@ -23,34 +24,33 @@ key_dict = {1: [pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_LCTRL],
 try:
     font = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 30)
 
-    sasamorning_img = pygame.image.load("./img/sasamorning.png")
-    sasaafternoon_img = pygame.image.load("./img/sasabackground.png")
-    sasanight_img = pygame.image.load("./img/sasanight.png")
+    sasa_morning_img = pygame.image.load("./img/sasa_morning.png")
+    sasa_afternoon_img = pygame.image.load("./img/sasa_background.png")
+    sasa_night_img = pygame.image.load("./img/sasa_night.png")
 
-    bullet_img = pygame.image.load("./img/blackbullet.png")
-    gold_bullet_img = pygame.image.load("./img/goldbullet.png")
-    floor_img = pygame.image.load("./img/floor1.png")
+    bullet_img = pygame.image.load("./img/bullet_normal.png")
+    gold_bullet_img = pygame.image.load("./img/bullet_gold.png")
 
-    item_life_img = pygame.image.load("./img/heart1.png")
-    item_bullet_img = pygame.image.load("./img/item_bullet1.png")
+    item_life_img = pygame.image.load("./img/item_heart.png")
+    item_magazine_img = pygame.image.load("./img/item_magazine.png")
     item_shield_img = pygame.image.load("./img/item_shield.png")
 
-    princess_img = pygame.image.load('./img/girlsheet.png')
-    princess_shield_img = pygame.image.load('./img/girlsheet_aura.png')
-    prince_img = pygame.image.load('./img/boysheet.png')
-    prince_shield_img = pygame.image.load('./img/boysheet_aura.png')
-    pinky_img = pygame.image.load('./img/pinkysheet.png')
-    pinky_shield_img = pygame.image.load('./img/pinkysheet_aura.png')
-    ninja_img = pygame.image.load('./img/ninjasheet.png')
-    ninja_shield_img = pygame.image.load('./img/ninjasheet_aura.png')
-    skeleton_img = pygame.image.load('./img/skeletonsheet.png')
-    skeleton_shield_img = pygame.image.load('./img/skeletonsheet_aura.png')
+    princess_img = pygame.image.load('./img/sheet_girl.png')
+    princess_shield_img = pygame.image.load('./img/sheet_girl_shield.png')
+    prince_img = pygame.image.load('./img/sheet_prince.png')
+    prince_shield_img = pygame.image.load('./img/sheet_boy_shield.png')
+    pinky_img = pygame.image.load('./img/sheet_pinky.png')
+    pinky_shield_img = pygame.image.load('./img/sheet_pinky_shield.png')
+    ninja_img = pygame.image.load('./img/sheet_ninja.png')
+    ninja_shield_img = pygame.image.load('./img/sheet_ninjn_shield.png')
+    skeleton_img = pygame.image.load('./img/sheet_skeleton.png')
+    skeleton_shield_img = pygame.image.load('./img/sheet_skeleton_shield.png')
 
-    BASICFONT = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 18)  # 나눔 글씨체로 설정, 크기는 18
-    BIGFONT = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 70)
-    HINTFONT = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 60)
-    bg = pygame.image.load("./img/startscreen.png")  # 시작 화면을 그림으로 가져옴
-    mbg = pygame.image.load("./img/mapselection.png")
+    font_basic = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 18)  # 나눔 글씨체로 설정, 크기는 18
+    font_big = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 70)
+    font_hint = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 60)
+    bg = pygame.image.load("./img/start_screen.png")  # 시작 화면을 그림으로 가져옴
+    mbg = pygame.image.load("./img/map_selection.png")
 
     pygame.mixer.music.load('./audio/bgm1.mp3')
     pygame.mixer.music.play(-1, 0.0)
@@ -64,4 +64,4 @@ except Exception as err:
 player_dict = {1: [prince_img, prince_shield_img], 2: [princess_img, princess_shield_img],
                3: [pinky_img, pinky_shield_img], 4: [ninja_img, ninja_shield_img],
                5: [skeleton_img, skeleton_shield_img]}
-stage_list = [sasamorning_img, sasaafternoon_img , sasanight_img]
+stage_list = [sasa_morning_img, sasa_afternoon_img , sasa_night_img]

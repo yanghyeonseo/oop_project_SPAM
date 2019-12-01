@@ -4,10 +4,6 @@ from pygame.locals import *
 
 pygame.init()  # 게임 초기화
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-TEXTCOLOR = WHITE
-
 
 def main():  # 시작 화면
     global DISPLAYSURF, BASICFONT, BIGFONT, HINTFONT
@@ -24,7 +20,7 @@ def main():  # 시작 화면
 def mainScreen():  # 시작 화면
     bg = pygame.image.load("./img/instruction.png")
     DISPLAYSURF.blit(bg, (0, 0))
-    pressKeySurf, pressKeyRect = makeTextObjs('Press a key to play.', HINTFONT, TEXTCOLOR)
+    pressKeySurf, pressKeyRect = makeTextObjs('Press a key to play.', font_hint, text_color)
     pressKeyRect.center = (int(screen_width / 2), int(screen_height / 2) + 200)
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)  # press a key to play를 화면 중앙 아래에 띄움
     while checkForKeyPress() == None:
@@ -45,7 +41,7 @@ def instruction():  # 시작 화면
 
 
 def characterSelectScreen():
-    bg = pygame.image.load("./img/character.png")
+    bg = pygame.image.load("./img/characters.png")
     DISPLAYSURF.blit(bg, (0, 0))
     pygame.display.update()
     p1 = None
