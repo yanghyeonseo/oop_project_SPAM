@@ -23,7 +23,9 @@ key_dict = {1: [pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_LCTRL],
 try:
     font = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 30)
 
-    background_img = pygame.image.load("./img/background1.png")
+    sasamorning_img = pygame.image.load("./img/sasamorning.png")
+    sasaafternoon_img = pygame.image.load("./img/sasabackground.png")
+    sasanight_img = pygame.image.load("./img/sasanight.png")
     bullet_img = pygame.image.load("./img/blackbullet.png")
     gold_bullet_img = pygame.image.load("./img/goldbullet.png")
     floor_img = pygame.image.load("./img/floor1.png")
@@ -55,3 +57,4 @@ except Exception as err:
     exit(0)
 
 player_dict = {1: prince_img, 2: princess_img, 3: pinky_img, 4: ninja_img, 5: skeleton_img}
+stage_list = [sasamorning_img, sasaafternoon_img , sasanight_img]
