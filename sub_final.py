@@ -87,11 +87,11 @@ def mapSelectScreen():
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == K_1:
-                    background = 1
+                    background = 0
                 if event.key == K_2:
-                    background = 2
+                    background = 1
                 if event.key == K_3:
-                    background = 3
+                    background = 2
     return map
 
 
