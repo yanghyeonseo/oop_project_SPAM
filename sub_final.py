@@ -101,7 +101,7 @@ def GameScreen(player1, player2):
     stage.make_board(368, 523, 310, (0, 115, 157, 220))
     stage.make_board(23, 150, 357, (0, 115, 157, 220))
     stage.make_board(490, 617, 357, (0, 115, 157, 220))
-    stage.make_player(player1, player2)
+    stage.make_player(player1+1, player2-4)
     stage.run_game()
     stage.game_over()
     pygame.quit()

@@ -33,9 +33,10 @@ class Movement:
 
 
 class Player(Movement):
-    def __init__(self, img, key_type):
-        super().__init__(img, player_width, player_height, screen_width/2-player_width/2, -player_height, 0, 0)
-        self.key_type = key_type
+    def __init__(self, num):
+        super().__init__(player_dict[num][0], player_width, player_height, screen_width/2-player_width/2, -player_height, 0, 0)
+        self.player_num = num
+        self.key_type = key_dict[self.player_num]
 
         self.direction = "right"
         self.jump_cnt = 0
@@ -44,7 +45,7 @@ class Player(Movement):
         self.special_bullet = 0
         self.shield = 0
 
-        self.sheet = img
+        self.sheet = player_dict[self.player_num][0]
         self.sheet.set_clip(pygame.Rect(13, 168, 30, 47))
         self.img = self.sheet.subsurface(self.sheet.get_clip())
         self.rect = self.img.get_rect()
@@ -78,6 +79,11 @@ class Player(Movement):
         self.event_name = ''
 
     def update(self, board_list, bullet_list, item_list):
+        if self.shield == 0:
+            self.sheet = player_dict[self.player_num][0]
+        else:
+            self.sheet = player_dict[self.player_num][1]
+
         if self.update_y(0.5, board_list):
             self.jump_cnt = 0
 
@@ -275,8 +281,8 @@ class Stage:
         self.board_list.append(Board(x1, x2, y, color))
 
     def make_player(self, player1, player2):
-        self.player_list.append(Player(player_dict[player1 + 1], key_dict[1]))
-        self.player_list.append(Player(player_dict[player2 - 4], key_dict[2]))
+        self.player_list.append(Player(player1))
+        self.player_list.append(Player(player2))
 
     def run_game(self):
         running = True
