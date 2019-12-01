@@ -23,6 +23,16 @@ key_dict = {1: [pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_LCTRL],
 # 이미지 및 오디오 불러오기
 try:
     font = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 30)
+    font_basic = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 18)  # 나눔 글씨체로 설정, 크기는 18
+    font_big = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 70)
+    font_hint = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 60)
+
+    background1 = pygame.image.load("./image/start_screen.png")  # 시작 화면을 그림으로 가져옴
+    background2 = pygame.image.load("./image/instruction.png")
+    background3 = pygame.image.load("./image/instruction2.png")
+    background4 = pygame.image.load("./image/gamerule.png")
+    character_background = pygame.image.load("./image/characters.png")
+    mbg = pygame.image.load("./image/map_selection.png")
 
     sasa_morning_img = pygame.image.load("./image/sasa_morning.png")
     sasa_afternoon_img = pygame.image.load("./image/sasa_background.png")
@@ -45,16 +55,6 @@ try:
     ninja_shield_img = pygame.image.load('./image/sheet_ninjn_shield.png')
     skeleton_img = pygame.image.load('./image/sheet_skeleton.png')
     skeleton_shield_img = pygame.image.load('./image/sheet_skeleton_shield.png')
-
-    gun_sound = pygame.mixer.Sound("./audio/gunsound.wav")
-    scream_sound = pygame.mixer.Sound("./audio/scream.wav")
-    pop_sound = pygame.mixer.Sound("./audio/pop.wav")
-
-    font_basic = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 18)  # 나눔 글씨체로 설정, 크기는 18
-    font_big = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 70)
-    font_hint = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 60)
-    bg = pygame.image.load("./image/start_screen.png")  # 시작 화면을 그림으로 가져옴
-    mbg = pygame.image.load("./image/map_selection.png")
 
     pygame.mixer.music.load('./audio/bgm1.mp3')
     pygame.mixer.music.play(-1, 0.0)
