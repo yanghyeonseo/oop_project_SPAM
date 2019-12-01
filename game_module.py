@@ -90,6 +90,7 @@ class Player(Movement):
             self.jump_cnt = 0
 
         if self.y > 3 * screen_height:
+            scream_sound.play()
             self.life -= 1
             self.Vx, self.Vy = 0, 0
             self.x = screen_width/2 - player_width/2
@@ -106,6 +107,7 @@ class Player(Movement):
             self.shield -= 1
         for item in item_list:
             if item.overlap(self.x, self.y):
+                pop_sound.play()
                 if item.type == 'heart':
                     self.life += 1
                 if item.type == 'bullet':
@@ -169,6 +171,7 @@ class Player(Movement):
                 self.action_name = 'down'
                 self.y += 1
             # 총알 쏘기
+            gun_sound.play()
             if event.key == self.key_type[4]:
                 self.action_name = 'shoot'
                 bullet_image = bullet_img
