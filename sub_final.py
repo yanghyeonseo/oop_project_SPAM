@@ -15,7 +15,7 @@ item_life_width, item_life_height = 32, 29
 item_bullet_width, item_bullet_height = 15, 15
 
 screen = pygame.display.set_mode((screen_width, screen_height))  # 화면 넓이 설정.
-pygame.display.set_caption("Gun mayhem")    # 화면 이름 설정
+pygame.display.set_caption("Gun mayhem")  # 화면 이름 설정
 
 FPS = 60
 clock = pygame.time.Clock()  # 파이게임 모듈에 사용될 FPS 설정
@@ -28,16 +28,17 @@ try:
     font = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 30)
 
     background_img = pygame.image.load("./img/sasabackground.png")
-    bullet_img = pygame.image.load("./img/bullet1.png")
+    bullet_img = pygame.image.load("./img/blackbullet.png")
     floor_img = pygame.image.load("./img/floor1.png")
     item_life_img = pygame.image.load("./img/heart1.png")
     item_bullet_img = pygame.image.load("./img/item_bullet1.png")
-    
+
     princess_img = pygame.image.load('./img/girlsheet.png')
     prince_img = pygame.image.load('./img/boysheet.png')
     pinky_img = pygame.image.load('./img/pinkysheet.png')
     ninja_img = pygame.image.load('./img/ninjasheet.png')
     skeleton_img = pygame.image.load('./img/skeletonsheet.png')
+    special_bullet_img = pygame.image.load("./img/goldbullet.png")
 
     pygame.mixer.music.load('./audio/bgm1.mp3')
     pygame.mixer.music.play(-1, 0.0)
@@ -82,7 +83,7 @@ class Movement:
 
 class Player(Movement):
     def __init__(self, img, key_type):
-        super().__init__(img, player_width, player_height, screen_width/2-player_width/2, -player_height, 0, 0)
+        super().__init__(img, player_width, player_height, screen_width / 2 - player_width / 2, -player_height, 0, 0)
         self.key_type = key_type
 
         self.direction = "right"
@@ -98,14 +99,14 @@ class Player(Movement):
         self.frame = 0
 
         # 이동 모션 (꼭짓점, 넓이, 높이)
-        self.right_states ={0: (13, 598, 30, 47), 1: (67, 598, 30, 47), 2: (120, 598, 30, 47),
-                            3: (175, 598, 30, 47), 4: (229, 598, 30, 47), 5: (281, 598, 30, 47),
-                            6: (335, 598, 30, 47), 7: (387, 598, 30, 47), 8: (439, 598, 30, 47)}
+        self.right_states = {0: (13, 598, 30, 47), 1: (67, 598, 30, 47), 2: (120, 598, 30, 47),
+                             3: (175, 598, 30, 47), 4: (229, 598, 30, 47), 5: (281, 598, 30, 47),
+                             6: (335, 598, 30, 47), 7: (387, 598, 30, 47), 8: (439, 598, 30, 47)}
 
         self.left_states = {0: (10, 490, 30, 47), 1: (64, 490, 30, 47), 2: (117, 490, 30, 47),
                             3: (172, 490, 30, 47), 4: (226, 490, 30, 47), 5: (278, 490, 30, 47),
                             6: (332, 490, 30, 47), 7: (384, 490, 30, 47), 8: (436, 490, 30, 47)}
-        
+
         # 정지 모션
         self.right_stand = (13, 598, 30, 47)
         self.left_stand = (17, 62, 30, 47)
@@ -114,16 +115,16 @@ class Player(Movement):
         self.shootr_stand = (5, 809, 40, 48)
 
         # 뛰는 모션
-        self.jump_states = {0:(67, 1078, 30, 47), 1:(120, 1078, 30, 47),
-                            2:(175, 1078, 30, 47), 3:(120, 1078, 30, 47), 4:(67, 1078, 30, 47)}
+        self.jump_states = {0: (67, 1078, 30, 47), 1: (120, 1078, 30, 47),
+                            2: (175, 1078, 30, 47), 3: (120, 1078, 30, 47), 4: (67, 1078, 30, 47)}
 
         # 총 쏘는 모션
-        self.shootl_states ={0: (8, 703, 33, 47), 1: (63, 703, 33, 47), 2: (115, 703, 33, 47),
-                            3: (165, 703, 35, 47), 4: (216, 703, 37, 47), 5: (265, 703, 40, 47)}
-        self.shootr_states ={0: (5, 809, 40, 48), 1: (60, 809, 40, 48), 2: (115, 809, 40, 48),
-                            3: (170, 809, 40, 48), 4: (225, 809, 40, 48), 5: (280, 809, 40, 48)}
+        self.shootl_states = {0: (8, 703, 33, 47), 1: (63, 703, 33, 47), 2: (115, 703, 33, 47),
+                              3: (165, 703, 35, 47), 4: (216, 703, 37, 47), 5: (265, 703, 40, 47)}
+        self.shootr_states = {0: (5, 809, 40, 48), 1: (60, 809, 40, 48), 2: (115, 809, 40, 48),
+                              3: (170, 809, 40, 48), 4: (225, 809, 40, 48), 5: (280, 809, 40, 48)}
         self.event_name = ''
-        
+
     def update(self, board_list, bullet_list, item_list):
         if self.update_y(0.5, board_list):
             self.jump_cnt = 0
@@ -131,7 +132,7 @@ class Player(Movement):
         if self.y > 3 * screen_height:
             self.life -= 1
             self.Vx, self.Vy = 0, 0
-            self.x = screen_width/2 - player_width/2
+            self.x = screen_width / 2 - player_width / 2
             self.y = -player_height
 
         for bullet in bullet_list:
@@ -163,7 +164,7 @@ class Player(Movement):
             self.clip(self.shootr_states)
         if self.event_name == 'shoot' and self.direction == 'left':
             self.clip(self.shootl_states)
-        
+
             # 정지 이벤트
         if self.event_name == 'stand_left':
             self.clip(self.left_stand)
@@ -177,9 +178,9 @@ class Player(Movement):
             self.clip(self.shootr_stand)
         if self.event_name == 'stand_shoot' and self.direction == 'left':
             self.clip(self.shootl_stand)
-        
+
         self.image = self.sheet.subsurface(self.sheet.get_clip())
-        
+
     def choice_event(self, event):
         Vx_unit = 2
         Vy_unit = 8
@@ -212,9 +213,9 @@ class Player(Movement):
                     self.special_bullet -= 1
 
                 if self.direction == "right":
-                    stage.bullet_list.append(Bullet(bullet_img, self.x+player_width, self.y+5, 10, power))
+                    stage.bullet_list.append(Bullet(bullet_img, self.x + player_width, self.y + 5, 10, power))
                 else:
-                    stage.bullet_list.append(Bullet(bullet_img, self.x-bullet_width, self.y+5, -10, power))
+                    stage.bullet_list.append(Bullet(bullet_img, self.x - bullet_width, self.y + 5, -10, power))
 
         if event.type == pygame.KEYUP:
             if event.key == self.key_type[0]:
@@ -249,7 +250,8 @@ class Player(Movement):
         else:
             self.sheet.set_clip(pygame.Rect(clipped_rect))
         return clipped_rect
-    
+
+
 class Board:
     def __init__(self, x1, x2, y, color):
         self.x1 = x1
@@ -259,10 +261,10 @@ class Board:
 
     def draw(self):
         d = 5
-        pygame.draw.rect(screen, self.color, [self.x1, self.y, self.x2-self.x1, d])
+        pygame.draw.rect(screen, self.color, [self.x1, self.y, self.x2 - self.x1, d])
 
     def is_on(self, w, h, p_x, p_y, p_Vy):
-        return self.x1-w < p_x < self.x2 and self.y - p_Vy <= p_y + h <= self.y
+        return self.x1 - w < p_x < self.x2 and self.y - p_Vy <= p_y + h <= self.y
 
 
 class Bullet(Movement):
@@ -274,7 +276,7 @@ class Bullet(Movement):
         self.update_x()
 
     def is_hit(self, p_x, p_y):
-        return self.x+self.width-player_width < p_x < self.x+self.width and self.y - player_height < p_y < self.y + self.height
+        return self.x + self.width - player_width < p_x < self.x + self.width and self.y - player_height < p_y < self.y + self.height
 
 
 class Item(Movement):
@@ -300,7 +302,7 @@ class Heart(Item):
 class Special_bullet(Item):
     def __init__(self, img, x, y):
         super().__init__(img, 'bullet', item_bullet_width, item_bullet_height, x, y)
-
+        img = special_bullet_img
 
 class Stage:
     def __init__(self):
@@ -314,8 +316,8 @@ class Stage:
         self.board_list.append(Board(x1, x2, y, color))
 
     def make_player(self, player1, player2):
-        self.player_list.append(Player(player_dict[player1+1], key_dict[1]))
-        self.player_list.append(Player(player_dict[player2-4], key_dict[2]))
+        self.player_list.append(Player(player_dict[player1 + 1], key_dict[1]))
+        self.player_list.append(Player(player_dict[player2 - 4], key_dict[2]))
 
     def run_game(self):
         running = True
@@ -359,9 +361,9 @@ class Stage:
 
             item_num = random.randint(1, 1000)
             if item_num <= 1:
-                self.item_list.append(Heart(item_life_img, random.randint(50, screen_width-50), 0))
+                self.item_list.append(Heart(item_life_img, random.randint(50, screen_width - 50), 0))
             elif item_num <= 2:
-                self.item_list.append(Special_bullet(item_bullet_img, random.randint(50, screen_width-50), 0))
+                self.item_list.append(Special_bullet(item_bullet_img, random.randint(50, screen_width - 50), 0))
             for item in self.item_list:
                 if item.type == 'used' or not item.in_screen():
                     self.item_list.remove(item)
@@ -376,51 +378,24 @@ class Stage:
         winner = ''
         for i in range(len(self.player_list)):
             if self.player_list[i].life > 0:
-                winner = 'Player {}'.format(i+1)
+                winner = 'Player {}'.format(i + 1)
 
         running = True
+        text1 = font.render("Game Over".format(self.player_list[0].life), True, (28, 0, 0))
+        text2 = font.render("{} WIN!!".format(winner), True, (28, 0, 0))
+        screen.blit(text1, (225, 150))
+        screen.blit(text2, (205, 200))
+        pygame.display.flip()
+
         while running:
-            screen.fill((0, 0, 0))  # 화면을 색칠함.
-            screen.blit(background_img, (0, 0))
-
-            text1 = font.render("Game Over".format(self.player_list[0].life), True, (28, 0, 0))
-            text2 = font.render("{} WIN!!".format(winner), True, (28, 0, 0))
-            screen.blit(text1, (225, 150))
-            screen.blit(text2, (205, 200))
-
-            P1_life = font.render("생명: {}".format(self.player_list[0].life), True, (28, 0, 0))
-            P2_life = font.render("생명: {}".format(self.player_list[1].life), True, (28, 0, 0))
-            screen.blit(P1_life, (20, 20))
-            screen.blit(P2_life, (530, 20))
-
-            P1_bullet = font.render("총알: {}".format(self.player_list[0].special_bullet), True, (28, 0, 0))
-            P2_bullet = font.render("총알: {}".format(self.player_list[1].special_bullet), True, (28, 0, 0))
-            screen.blit(P1_bullet, (20, 60))
-            screen.blit(P2_bullet, (530, 60))
-
             events = pygame.event.get()
             for event in events:
                 # 게임 종료조건, 우측 상단에 X 버튼 누르면 pygame 모듈과 프로그램이 종료되는 코드
                 if event.type == pygame.QUIT:
                     running = False
-
-            for board in self.board_list:
-                board.draw()
-
-            for player in self.player_list:
-                screen.blit(player.img_set, (player.x, player.y))
-
-            for bullet in self.bullet_list:
-                if bullet.in_screen():
-                    screen.blit(bullet.img, (bullet.x, bullet.y))
-
-            for item in self.item_list:
-                if item.type != 'used':
-                    screen.blit(item.img, (item.x, item.y))
-
             clock.tick(FPS)  # 다음 와일문으로 넘어감. loop
-            pygame.display.flip()
-            
+
+
 def main():  # 시작 화면
     global DISPLAYSURF, BASICFONT, BIGFONT, HINTFONT
     pygame.init()
@@ -436,6 +411,7 @@ def main():  # 시작 화면
     while True:
         mainScreen()
 
+
 def mainScreen():  # 시작 화면
     bg = pygame.image.load("./img/instruction.png")
     DISPLAYSURF.blit(bg, (0, 0))
@@ -447,14 +423,16 @@ def mainScreen():  # 시작 화면
     while True:
         instruction()
 
+
 def instruction():  # 시작 화면
     bg = pygame.image.load("./img/instruction2.png")
     DISPLAYSURF.blit(bg, (0, 0))
     while checkForKeyPress() == None:
         pygame.display.update()
     while True:
-        p1,p2 = characterSelectScreen()
-        GameScreen(p1,p2)
+        p1, p2 = characterSelectScreen()
+        map = mapSelectScreen()
+        GameScreen(p1, p2)
 
 
 def characterSelectScreen():
@@ -465,7 +443,9 @@ def characterSelectScreen():
     p2 = None
     while p1 is None or p2 is None:
         for event in pygame.event.get():
-            if event.type  == pygame.KEYDOWN:
+            if event == pygame.QUIT:
+                break
+            if event.type == pygame.KEYDOWN:
                 if event.key == K_0:
                     p1 = 0
                 if event.key == K_1:
@@ -488,8 +468,28 @@ def characterSelectScreen():
                     p2 = 9
     return p1, p2
 
-def GameScreen(player1,player2):
-    stage = Stage()
+
+def mapSelectScreen():
+    bg = pygame.image.load("./img/mapselection.png")
+    DISPLAYSURF.blit(bg, (0, 0))
+    pygame.display.update()
+    map = None
+    while map is None:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == K_1:
+                    map = 1
+                if event.key == K_2:
+                    map = 2
+                if event.key == K_3:
+                    map = 3
+    return map
+
+
+stage = Stage()
+
+
+def GameScreen(player1, player2):
     stage.make_board(267, 382, 135, (0, 115, 157, 220))
     stage.make_board(268, 381, 210, (0, 115, 157, 220))
     stage.make_board(123, 278, 310, (0, 115, 157, 220))
@@ -500,7 +500,8 @@ def GameScreen(player1,player2):
     stage.run_game()
     stage.game_over()
     pygame.quit()
-    
+
+
 def makeTextObjs(text, font, color):  # 텍스트 생성 함수
     surf = font.render(text, True, color)
     return surf, surf.get_rect()
@@ -512,6 +513,7 @@ def checkForKeyPress():  # 키를 눌렀는지 확인하는 함수
             continue
         return event.key
     return None
+
 
 if __name__ == '__main__':
     main()
