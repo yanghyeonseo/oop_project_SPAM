@@ -31,6 +31,7 @@ try:
     background2 = pygame.image.load("./image/instruction.png")
     background3 = pygame.image.load("./image/instruction2.png")
     background4 = pygame.image.load("./image/gamerule.png")
+    background5 = pygame.image.load("./image/item_screen.png")
     character_background = pygame.image.load("./image/characters.png")
     map_background = pygame.image.load("./image/map_selection.png")
 
@@ -60,7 +61,7 @@ try:
     scream_sound = pygame.mixer.Sound("./audio/sound_scream.wav")
     pop_sound = pygame.mixer.Sound("./audio/sound_pop.wav")
 
-    pygame.mixer.music.load('./audio/bgm1.mp3')
+    pygame.mixer.music.load('./audio/mainmenu.mp3')
     pygame.mixer.music.play(-1, 0.0)
 
 except Exception as err:
