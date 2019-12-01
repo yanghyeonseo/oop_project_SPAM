@@ -35,6 +35,14 @@ def instruction():  # 시작 화면
     while checkForKeyPress() == None:
         pygame.display.update()
     while True:
+        gameRule()
+        
+def gameRule():  # 시작 화면
+    bg = pygame.image.load("./img/gamerule.png")
+    DISPLAYSURF.blit(bg, (0, 0))
+    while checkForKeyPress() == None:
+        pygame.display.update()
+    while True:
         p1, p2 = characterSelectScreen()
         background = mapSelectScreen()
         GameScreen(p1, p2, background)
