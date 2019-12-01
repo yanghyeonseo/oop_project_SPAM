@@ -40,8 +40,8 @@ def instruction():  # 시작 화면
         pygame.display.update()
     while True:
         p1, p2 = characterSelectScreen()
-        map = mapSelectScreen()
-        GameScreen(p1, p2)
+        background = mapSelectScreen()
+        GameScreen(p1, p2, background)
 
 
 def characterSelectScreen():
@@ -81,20 +81,20 @@ def characterSelectScreen():
 def mapSelectScreen():
     DISPLAYSURF.blit(mbg, (0, 0))
     pygame.display.update()
-    map = None
-    while map is None:
+    background = None
+    while background is None:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == K_1:
-                    map = 1
+                    background = 0
                 if event.key == K_2:
-                    map = 2
+                    background = 1
                 if event.key == K_3:
-                    map = 3
-    return map
+                    background = 2
+    return background
 
 
-def GameScreen(player1, player2):
+def GameScreen(player1, player2, background):
     stage.make_board(267, 382, 135, (0, 115, 157, 220))
     stage.make_board(268, 381, 210, (0, 115, 157, 220))
     stage.make_board(123, 278, 310, (0, 115, 157, 220))
@@ -102,7 +102,7 @@ def GameScreen(player1, player2):
     stage.make_board(23, 150, 357, (0, 115, 157, 220))
     stage.make_board(490, 617, 357, (0, 115, 157, 220))
     stage.make_player(player1, player2)
-    stage.run_game()
+    stage.run_game(background)
     stage.game_over()
     pygame.quit()
 
