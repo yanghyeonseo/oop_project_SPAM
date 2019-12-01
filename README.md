@@ -85,10 +85,10 @@ pygame, random 등의 라이브러리를 이용할 것이다.
 
 
 ## 9. 실행 방법
-1. init.py와 game_module.py와 screen.py를 다운로드하고 한 폴더 안에 넣는다.
+1. init.py와 game_module.py와 screen.py와 run_this_file_to_start.py를 다운로드하고 한 폴더 안에 넣는다.
 2. 코드가 있는 폴더 안에 image라는 이름의 새 폴더와 audio라는 이름의 새 폴더를 생성한다.
 3. image 파일과 audio 파일에 있는 모든 것을 다운로드하고 image 폴더와 audio 폴더에 넣는다.
-4. screen.py를 실행시킨다.
+4. run_this_file_to_start.py를 실행시킨다.
 
 
 #### readme 작성관련 참고하기 [바로가기](https://heropy.blog/2017/09/30/markdown/)
