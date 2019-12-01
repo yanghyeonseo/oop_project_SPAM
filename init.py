@@ -26,6 +26,7 @@ try:
     sasamorning_img = pygame.image.load("./img/sasamorning.png")
     sasaafternoon_img = pygame.image.load("./img/sasabackground.png")
     sasanight_img = pygame.image.load("./img/sasanight.png")
+
     bullet_img = pygame.image.load("./img/blackbullet.png")
     gold_bullet_img = pygame.image.load("./img/goldbullet.png")
     floor_img = pygame.image.load("./img/floor1.png")
@@ -35,17 +36,21 @@ try:
     item_shield_img = pygame.image.load("./img/item_shield.png")
 
     princess_img = pygame.image.load('./img/girlsheet.png')
+    princess_shield_img = pygame.image.load('./img/girlsheet_aura.png')
     prince_img = pygame.image.load('./img/boysheet.png')
+    prince_shield_img = pygame.image.load('./img/boysheet_aura.png')
     pinky_img = pygame.image.load('./img/pinkysheet.png')
+    pinky_shield_img = pygame.image.load('./img/pinkysheet_aura.png')
     ninja_img = pygame.image.load('./img/ninjasheet.png')
+    ninja_shield_img = pygame.image.load('./img/ninjasheet_aura.png')
     skeleton_img = pygame.image.load('./img/skeletonsheet.png')
-    special_bullet_img = pygame.image.load("./img/goldbullet.png")
+    skeleton_shield_img = pygame.image.load('./img/skeletonsheet_aura.png')
 
     BASICFONT = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 18)  # 나눔 글씨체로 설정, 크기는 18
     BIGFONT = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 70)
     HINTFONT = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 60)
     bg = pygame.image.load("./img/startscreen.png")  # 시작 화면을 그림으로 가져옴
-    mbg = pygame.image.load("./img/startscreen.png")
+    mbg = pygame.image.load("./img/mapselection.png")
 
     pygame.mixer.music.load('./audio/bgm1.mp3')
     pygame.mixer.music.play(-1, 0.0)
@@ -56,5 +61,7 @@ except Exception as err:
     pygame.quit()
     exit(0)
 
-player_dict = {1: prince_img, 2: princess_img, 3: pinky_img, 4: ninja_img, 5: skeleton_img}
+player_dict = {1: [prince_img, prince_shield_img], 2: [princess_img, princess_shield_img],
+               3: [pinky_img, pinky_shield_img], 4: [ninja_img, ninja_shield_img],
+               5: [skeleton_img, skeleton_shield_img]}
 stage_list = [sasamorning_img, sasaafternoon_img , sasanight_img]
