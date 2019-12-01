@@ -28,7 +28,6 @@ try:
     font = pygame.font.Font('./font/NanumSquareRoundEB.ttf', 30)
 
     background_img = pygame.image.load("./img/sasabackground.png")
-    player_img = pygame.image.load("./img/girlsheet.png")
     bullet_img = pygame.image.load("./img/bullet1.png")
     floor_img = pygame.image.load("./img/floor1.png")
     item_life_img = pygame.image.load("./img/heart1.png")
@@ -49,7 +48,7 @@ except Exception as err:
     pygame.quit()
     exit(0)
 
-player_dict = {1: princess_img, 2: prince_img, 3: pinky_img, 4: ninja_img, 5: skeleton_img}
+player_dict = {1: prince_img, 2: princess_img, 3: pinky_img, 4: ninja_img, 5: skeleton_img}
 
 class Movement:
     def __init__(self, img, width, height, x, y, Vx, Vy):
@@ -91,7 +90,7 @@ class Player(Movement):
         self.life = 5
         self.special_bullet = 0
 
-        self.sheet = pygame.image.load('./img/girlsheet.png')
+        self.sheet = img
         self.sheet.set_clip(pygame.Rect(13, 168, 30, 47))
         self.img = self.sheet.subsurface(self.sheet.get_clip())
         self.rect = self.img.get_rect()
@@ -153,7 +152,6 @@ class Player(Movement):
 
         if self.event_name == 'left':
             self.clip(self.left_states)
-            print('rrr')
         if self.event_name == 'right':
             self.clip(self.right_states)
         if self.event_name == 'up':
@@ -184,7 +182,6 @@ class Player(Movement):
     def choice_event(self, event):
         Vx_unit = 2
         Vy_unit = 8
-        # print(event)
 
         if event.type == pygame.KEYDOWN:
             # 왼쪽 오른쪽
@@ -315,9 +312,9 @@ class Stage:
     def make_board(self, x1, x2, y, color):
         self.board_list.append(Board(x1, x2, y, color))
 
-    def make_player(self, num):
-        for i in range(1, num+1):
-            self.player_list.append(Player(player_img, key_dict[i]))
+    def make_player(self, player1, player2):
+        self.player_list.append(Player(player_dict[player1+1], key_dict[1]))
+        self.player_list.append(Player(player_dict[player2-4], key_dict[2]))
 
     def run_game(self):
         running = True
@@ -344,7 +341,6 @@ class Stage:
                 if player.life <= 0:
                     running = False
 
-                print(events)
                 for event in events:
                     # 게임 종료조건, 우측 상단에 X 버튼 누르면 pygame 모듈과 프로그램이 종료되는 코드
                     if event.type == pygame.QUIT:
@@ -427,12 +423,12 @@ class Stage:
 def main():  # 시작 화면
     global DISPLAYSURF, BASICFONT, BIGFONT, HINTFONT
     pygame.init()
-    DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-    BASICFONT = pygame.font.Font('nanum.ttf', 18)  # 나눔 글씨체로 설정, 크기는 18
-    BIGFONT = pygame.font.Font('nanum.ttf', 70)
-    HINTFONT = pygame.font.Font('nanum.ttf', 60)
-    bg = pygame.image.load("startscreen.png")  # 시작 화면을 그림으로 가져옴
-    pygame.display.set_caption('Candy Baseball')  # 창의 제목 설정
+    DISPLAYSURF = pygame.display.set_mode((screen_width, screen_height))
+    BASICFONT = pygame.font.Font('./font/nanum.ttf', 18)  # 나눔 글씨체로 설정, 크기는 18
+    BIGFONT = pygame.font.Font('./font/nanum.ttf', 70)
+    HINTFONT = pygame.font.Font('./font/nanum.ttf', 60)
+    bg = pygame.image.load("./img/startscreen.png")  # 시작 화면을 그림으로 가져옴
+    pygame.display.set_caption('Gun Mayhem')  # 창의 제목 설정
     DISPLAYSURF.blit(bg, (0, 0))  # 그림의 왼쪽 위 모서리가 (0,0)에 있음
     while checkForKeyPress() == None:
         pygame.display.update()  # 키보드를 누르면 다음 화면으로 넘어감
@@ -440,10 +436,10 @@ def main():  # 시작 화면
         mainScreen()
 
 def mainScreen():  # 시작 화면
-    bg = pygame.image.load("instruction.png")
+    bg = pygame.image.load("./img/instruction.png")
     DISPLAYSURF.blit(bg, (0, 0))
     pressKeySurf, pressKeyRect = makeTextObjs('Press a key to play.', HINTFONT, TEXTCOLOR)
-    pressKeyRect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2) + 200)
+    pressKeyRect.center = (int(screen_width / 2), int(screen_height / 2) + 200)
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)  # press a key to play를 화면 중앙 아래에 띄움
     while checkForKeyPress() == None:
         pygame.display.update()
@@ -451,17 +447,17 @@ def mainScreen():  # 시작 화면
         instruction()
 
 def instruction():  # 시작 화면
-    bg = pygame.image.load("instruction2.png")
+    bg = pygame.image.load("./img/instruction2.png")
     DISPLAYSURF.blit(bg, (0, 0))
     while checkForKeyPress() == None:
         pygame.display.update()
     while True:
-        a,b = characterSelectScreen()
-    print(a,b)
+        p1,p2 = characterSelectScreen()
+        GameScreen(p1,p2)
 
 
 def characterSelectScreen():
-    bg = pygame.image.load("character.png")
+    bg = pygame.image.load("./img/character.png")
     DISPLAYSURF.blit(bg, (0, 0))
     pygame.display.update()
     p1 = None
@@ -491,7 +487,7 @@ def characterSelectScreen():
                     p2 = 9
     return p1, p2
 
-def GameScreen():
+def GameScreen(player1,player2):
     stage = Stage()
     stage.make_board(267, 382, 135, (0, 115, 157, 220))
     stage.make_board(268, 381, 210, (0, 115, 157, 220))
@@ -499,7 +495,7 @@ def GameScreen():
     stage.make_board(368, 523, 310, (0, 115, 157, 220))
     stage.make_board(23, 150, 357, (0, 115, 157, 220))
     stage.make_board(490, 617, 357, (0, 115, 157, 220))
-    stage.make_player(2)
+    stage.make_player(player1, player2)
     stage.run_game()
     stage.game_over()
     pygame.quit()
