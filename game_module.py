@@ -1,11 +1,13 @@
-from init import *
+from initing import *
 
 pygame.init()  # 게임 초기화
+
+screen = pygame.display.set_mode((screen_width, screen_height))  # 화면 넓이 설정.
+pygame.display.set_caption("Gun mayhem")    # 화면 이름 설정
 
 
 class Movement:
     def __init__(self, img, width, height, x, y, Vx, Vy):
-        self.img_set = img
         self.img = img
         self.width = width
         self.height = height
@@ -33,10 +35,10 @@ class Movement:
 
 
 class Player(Movement):
-    def __init__(self, num):
-        super().__init__(player_dict[num][0], player_width, player_height, screen_width/2-player_width/2, -player_height, 0, 0)
+    def __init__(self, num, key_type):
+        super().__init__(player_img_dict[num][0], player_width, player_height, screen_width / 2 - player_width / 2, -player_height, 0, 0)
         self.player_num = num
-        self.key_type = key_dict[self.player_num]
+        self.key_type = key_type
 
         self.direction = "right"
         self.jump_cnt = 0
@@ -45,9 +47,9 @@ class Player(Movement):
         self.special_bullet = 0
         self.shield = 0
 
-        self.sheet = player_dict[self.player_num][0]
-        self.sheet.set_clip(pygame.Rect(13, 168, 30, 47))
-        self.img = self.sheet.subsurface(self.sheet.get_clip())
+        self.img_set = player_img_dict[self.player_num][0]
+        self.img_set.set_clip(pygame.Rect(13, 168, 30, 47))
+        self.img = self.img_set.subsurface(self.img_set.get_clip())
         self.rect = self.img.get_rect()
         self.frame = 0
 
@@ -76,13 +78,13 @@ class Player(Movement):
                               3: (165, 703, 35, 47), 4: (216, 703, 37, 47), 5: (265, 703, 40, 47)}
         self.shootr_states = {0: (5, 809, 40, 48), 1: (60, 809, 40, 48), 2: (115, 809, 40, 48),
                               3: (170, 809, 40, 48), 4: (225, 809, 40, 48), 5: (280, 809, 40, 48)}
-        self.event_name = ''
+        self.action_name = ''
 
     def update(self, board_list, bullet_list, item_list):
         if self.shield == 0:
-            self.sheet = player_dict[self.player_num][0]
+            self.img_set = player_img_dict[self.player_num][0]
         else:
-            self.sheet = player_dict[self.player_num][1]
+            self.img_set = player_img_dict[self.player_num][1]
 
         if self.update_y(0.5, board_list):
             self.jump_cnt = 0
@@ -112,34 +114,35 @@ class Player(Movement):
                     self.shield += 600
                 item.type = 'used'
 
-        if self.event_name == 'left':
+    def update_sprite(self):
+        if self.action_name == 'left':
             self.clip(self.left_states)
-        if self.event_name == 'right':
+        if self.action_name == 'right':
             self.clip(self.right_states)
-        if self.event_name == 'up':
+        if self.action_name == 'up':
             self.clip(self.jump_states)
-        if self.event_name == 'down':
+        if self.action_name == 'down':
             self.clip(self.jump_states)
-        if self.event_name == 'shoot' and self.direction == 'right':
+        if self.action_name == 'shoot' and self.direction == 'right':
             self.clip(self.shootr_states)
-        if self.event_name == 'shoot' and self.direction == 'left':
+        if self.action_name == 'shoot' and self.direction == 'left':
             self.clip(self.shootl_states)
 
             # 정지 이벤트
-        if self.event_name == 'stand_left':
+        if self.action_name == 'stand_left':
             self.clip(self.left_stand)
-        if self.event_name == 'stand_right':
+        if self.action_name == 'stand_right':
             self.clip(self.right_stand)
-        if self.event_name == 'stand_up':
+        if self.action_name == 'stand_up':
             self.clip(self.jump_stand)
-        if self.event_name == 'stand_down':
+        if self.action_name == 'stand_down':
             self.clip(self.jump_stand)
-        if self.event_name == 'stand_shoot' and self.direction == 'right':
+        if self.action_name == 'stand_shoot' and self.direction == 'right':
             self.clip(self.shootr_stand)
-        if self.event_name == 'stand_shoot' and self.direction == 'left':
+        if self.action_name == 'stand_shoot' and self.direction == 'left':
             self.clip(self.shootl_stand)
 
-        self.img = self.sheet.subsurface(self.sheet.get_clip())
+        self.img = self.img_set.subsurface(self.img_set.get_clip())
 
     def choice_event(self, event):
         Vx_unit = 2
@@ -150,24 +153,24 @@ class Player(Movement):
             # 왼쪽 오른쪽
             if event.key == self.key_type[0]:
                 self.direction = "left"
-                self.event_name = 'left'
+                self.action_name = 'left'
                 self.Vx = -Vx_unit
             if event.key == self.key_type[1]:
                 self.direction = "right"
-                self.event_name = 'right'
+                self.action_name = 'right'
                 self.Vx = Vx_unit
             # 점프, 아래 통과
             if event.key == self.key_type[2]:
                 if self.jump_cnt < 2:
                     self.Vy = -Vy_unit
-                    self.event_name = 'up'
+                    self.action_name = 'up'
                     self.jump_cnt += 1
             if event.key == self.key_type[3]:
-                self.event_name = 'down'
+                self.action_name = 'down'
                 self.y += 1
             # 총알 쏘기
             if event.key == self.key_type[4]:
-                self.event_name = 'shoot'
+                self.action_name = 'shoot'
                 bullet_image = bullet_img
                 power = 1
                 if self.special_bullet > 0:
@@ -182,17 +185,17 @@ class Player(Movement):
 
         if event.type == pygame.KEYUP:
             if event.key == self.key_type[0]:
-                self.event_name = 'stand_left'
+                self.action_name = 'stand_left'
                 self.Vx = 0
             if event.key == self.key_type[1]:
-                self.event_name = 'stand_right'
+                self.action_name = 'stand_right'
                 self.Vx = 0
             if event.key == self.key_type[2]:
-                self.event_name = 'stand_up'
+                self.action_name = 'stand_up'
             if event.key == self.key_type[3]:
-                self.event_name = 'stand_down'
+                self.action_name = 'stand_down'
             if event.key == self.key_type[4]:
-                self.event_name = 'stand_shoot'
+                self.action_name = 'stand_shoot'
 
     def get_frame(self, frame_set):
         # frame_set : 스프래드의 위치를 받아놓은 dict
@@ -209,9 +212,9 @@ class Player(Movement):
         # clipped_rect 가 위치데이터의 dict면 get_frame으로
         # 알맞은 위치를 가져온다.
         if type(clipped_rect) is dict:
-            self.sheet.set_clip(pygame.Rect(self.get_frame(clipped_rect)))
+            self.img_set.set_clip(pygame.Rect(self.get_frame(clipped_rect)))
         else:
-            self.sheet.set_clip(pygame.Rect(clipped_rect))
+            self.img_set.set_clip(pygame.Rect(clipped_rect))
         return clipped_rect
 
 
@@ -255,18 +258,18 @@ class Item(Movement):
 
 
 class Heart(Item):
-    def __init__(self, img, x, y):
-        super().__init__(img, 'heart', item_heart_width, item_heart_height, x, y)
+    def __init__(self, x, y):
+        super().__init__(item_life_img, 'heart', item_heart_width, item_heart_height, x, y)
 
 
 class Magazine(Item):
-    def __init__(self, img, x, y):
-        super().__init__(img, 'bullet', item_magazine_width, item_magazine_height, x, y)
+    def __init__(self, x, y):
+        super().__init__(item_magazine_img, 'bullet', item_magazine_width, item_magazine_height, x, y)
 
 
 class Shield(Item):
-    def __init__(self, img, x, y):
-        super().__init__(img, 'shield', item_shield_width, item_shield_height, x, y)
+    def __init__(self, x, y):
+        super().__init__(item_shield_img, 'shield', item_shield_width, item_shield_height, x, y)
 
 
 class Stage:
@@ -281,25 +284,25 @@ class Stage:
         self.board_list.append(Board(x1, x2, y, color))
 
     def make_player(self, player1, player2):
-        self.player_list.append(Player(player1))
-        self.player_list.append(Player(player2))
+        self.player_list.append(Player(player1+1, key_dict[1]))
+        self.player_list.append(Player(player2-4, key_dict[2]))
 
     def run_game(self, background):
         running = True
 
         while running:
             screen.fill((0, 0, 0))  # 화면을 색칠함.
-            screen.blit(stage_list[background], (0, 0))
+            screen.blit(stage_img_list[background], (0, 0))
 
-            P1_life = font.render("생명: {}".format(self.player_list[0].life), True, (28, 0, 0))
-            P2_life = font.render("생명: {}".format(self.player_list[1].life), True, (28, 0, 0))
-            screen.blit(P1_life, (20, 20))
-            screen.blit(P2_life, (530, 20))
+            info1_life = font.render("생명: {}".format(self.player_list[0].life), True, (28, 0, 0))
+            info2_life = font.render("생명: {}".format(self.player_list[1].life), True, (28, 0, 0))
+            screen.blit(info1_life, (20, 20))
+            screen.blit(info2_life, (530, 20))
 
-            P1_bullet = font.render("총알: {}".format(self.player_list[0].special_bullet), True, (28, 0, 0))
-            P2_bullet = font.render("총알: {}".format(self.player_list[1].special_bullet), True, (28, 0, 0))
-            screen.blit(P1_bullet, (20, 60))
-            screen.blit(P2_bullet, (530, 60))
+            info1_bullet = font.render("총알: {}".format(self.player_list[0].special_bullet), True, (28, 0, 0))
+            info2_bullet = font.render("총알: {}".format(self.player_list[1].special_bullet), True, (28, 0, 0))
+            screen.blit(info1_bullet, (20, 60))
+            screen.blit(info2_bullet, (530, 60))
 
             for board in self.board_list:
                 board.draw()
@@ -316,6 +319,7 @@ class Stage:
                     player.choice_event(event)
 
                 player.update(self.board_list, self.bullet_list, self.item_list)
+                player.update_sprite()
                 screen.blit(player.img, (player.x, player.y))
 
             for bullet in self.bullet_list:
@@ -326,11 +330,11 @@ class Stage:
 
             item_num = random.randint(1, 1000)
             if item_num <= 1:
-                self.item_list.append(Heart(item_life_img, random.randint(50, screen_width-50), 0))
+                self.item_list.append(Heart(random.randint(50, screen_width-50), 0))
             elif item_num <= 2:
-                self.item_list.append(Magazine(item_bullet_img, random.randint(50, screen_width - 50), 0))
+                self.item_list.append(Magazine(random.randint(50, screen_width - 50), 0))
             elif item_num <= 3:
-                self.item_list.append(Shield(item_shield_img, random.randint(50, screen_width - 50), 0))
+                self.item_list.append(Shield(random.randint(50, screen_width - 50), 0))
             for item in self.item_list:
                 if item.type == 'used' or not item.in_screen():
                     self.item_list.remove(item)
@@ -364,14 +368,3 @@ class Stage:
 
 
 stage = Stage()
-# stage = Stage()
-# stage.make_board(100, 150, 310, (0, 0, 0, 0))
-# stage.make_board(100, 500, 400, (0, 255, 0, 0))
-# stage.make_board(300, 500, 350, (0, 0, 255, 0))
-# stage.make_board(320, 450, 320, (0, 100, 255, 40))
-# stage.make_player(2)
-# stage.run_game()
-# stage.game_over()
-#
-# pygame.quit()
-

@@ -1,5 +1,5 @@
-from init import *
-from gun_mayhem import *
+from initing import *
+from game_module import *
 from pygame.locals import *
 
 pygame.init()  # 게임 초기화
@@ -18,7 +18,7 @@ def main():  # 시작 화면
 
 
 def mainScreen():  # 시작 화면
-    bg = pygame.image.load("./img/instruction.png")
+    bg = pygame.image.load("./image/instruction.png")
     DISPLAYSURF.blit(bg, (0, 0))
     pressKeySurf, pressKeyRect = makeTextObjs('Press a key to play.', font_hint, text_color)
     pressKeyRect.center = (int(screen_width / 2), int(screen_height / 2) + 200)
@@ -30,7 +30,7 @@ def mainScreen():  # 시작 화면
 
 
 def instruction():  # 시작 화면
-    bg = pygame.image.load("./img/instruction2.png")
+    bg = pygame.image.load("./image/instruction2.png")
     DISPLAYSURF.blit(bg, (0, 0))
     while checkForKeyPress() == None:
         pygame.display.update()
@@ -38,7 +38,18 @@ def instruction():  # 시작 화면
         gameRule()
         
 def gameRule():  # 시작 화면
-    bg = pygame.image.load("./img/gamerule.png")
+    bg = pygame.image.load("./image/gamerule.png")
+    DISPLAYSURF.blit(bg, (0, 0))
+    while checkForKeyPress() == None:
+        pygame.display.update()
+    while True:
+        p1, p2 = characterSelectScreen()
+        background = mapSelectScreen()
+        GameScreen(p1, p2, background)
+
+
+def gameRule():  # 시작 화면
+    bg = pygame.image.load("./image/gamerule.png")
     DISPLAYSURF.blit(bg, (0, 0))
     while checkForKeyPress() == None:
         pygame.display.update()
@@ -49,7 +60,7 @@ def gameRule():  # 시작 화면
 
 
 def characterSelectScreen():
-    bg = pygame.image.load("./img/characters.png")
+    bg = pygame.image.load("./image/characters.png")
     DISPLAYSURF.blit(bg, (0, 0))
     pygame.display.update()
     p1 = None

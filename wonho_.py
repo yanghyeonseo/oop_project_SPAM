@@ -16,7 +16,7 @@ def main():  # 시작 화면
     BASICFONT = pygame.font.Font('nanum.ttf', 18)  # 나눔 글씨체로 설정, 크기는 18
     BIGFONT = pygame.font.Font('nanum.ttf', 70)
     HINTFONT = pygame.font.Font('nanum.ttf', 60)
-    bg = pygame.image.load("startscreen.png")  # 시작 화면을 그림으로 가져옴
+    bg = pygame.image.load("start_screen.png")  # 시작 화면을 그림으로 가져옴
     pygame.display.set_caption('Candy Baseball')  # 창의 제목 설정
     DISPLAYSURF.blit(bg, (0, 0))  # 그림의 왼쪽 위 모서리가 (0,0)에 있음
     while checkForKeyPress() == None:
@@ -46,7 +46,7 @@ def instruction():  # 시작 화면
 
 
 def characterSelectScreen():
-    bg = pygame.image.load("character.png")
+    bg = pygame.image.load("characters.png")
     DISPLAYSURF.blit(bg, (0, 0))
     pygame.display.update()
     p1 = None

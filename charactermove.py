@@ -9,7 +9,7 @@ pad_height = 640  # 게임화면의 세로 크기
 
 class GameCharacter:
     def __init__(self, position):
-        self.sheet = pygame.image.load('girlsheet.png')
+        self.sheet = pygame.image.load('sheet_girl.png')
         self.sheet.set_clip(pygame.Rect(13, 168, 30, 47))
         self.image = self.sheet.subsurface(self.sheet.get_clip())
         self.rect = self.image.get_rect()
@@ -134,31 +134,31 @@ class GameCharacter:
 class Princess(GameCharacter):
     def __init__(self, position):
         super().__init__(position)
-        self.sheet = pygame.image.load('girlsheet.png')
+        self.sheet = pygame.image.load('sheet_girl.png')
         self.sheet.set_clip(pygame.Rect(13, 168, 30, 47))
 
 class Prince(GameCharacter):
     def __init__(self, position):
         super().__init__(position)
-        self.sheet = pygame.image.load('boysheet.png')
+        self.sheet = pygame.image.load('sheet_prince.png')
         self.sheet.set_clip(pygame.Rect(13, 168, 30, 47))
 
 class Pinky(GameCharacter):
     def __init__(self, position):
         super().__init__(position)
-        self.sheet = pygame.image.load('pinkysheet.png')
+        self.sheet = pygame.image.load('sheet_pinky.png')
         self.sheet.set_clip(pygame.Rect(13, 168, 30, 47))
 
 class Ninja(GameCharacter):
     def __init__(self, position):
         super().__init__(position)
-        self.sheet = pygame.image.load('ninjasheet.png')
+        self.sheet = pygame.image.load('sheet_ninja.png')
         self.sheet.set_clip(pygame.Rect(13, 168, 30, 47))
 
 class Skeleton(GameCharacter):
     def __init__(self, position):
         super().__init__(position)
-        self.sheet = pygame.image.load('skeletonsheet.png')
+        self.sheet = pygame.image.load('sheet_skeleton.png')
         self.sheet.set_clip(pygame.Rect(13, 168, 30, 47))
 
 pygame.init()
